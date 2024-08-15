@@ -247,13 +247,13 @@ def state_update():
 
                 if response == VERTICAL_HOLD_CUP :
                     socketio.emit('state update', {'state' : 1})
-                elif response == HORIZONTAL_HOLD_CUP:
+                elif response == HORIZONTAL_WASTE_CUP:
                     socketio.emit('state update', {'state' : 2})
                 elif response == HORIZONTAL_LOAD_CUP:
                     socketio.emit('state update', {'state' : 3})
 
                 time.sleep(0.1)
-                
+
                 print(response)
                 if response == HORIZONTAL_LOAD_CUP:
                     time.sleep(0.5)
