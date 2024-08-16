@@ -21,6 +21,7 @@
 #include<CUP.h>
 #include<Waterpump.h>
 #include<Queue.h>
+#include<Ultrasonic.h>
 
 Waterpump waterpump(WATERPUMP_EN, WATERPUMP_PIN_1, WATERPUMP_PIN_2);
 
@@ -31,6 +32,8 @@ Queue queue(QUEUE_SPEED, QUEUE_MOTOR_EN, QUEUE_MOTOR_PIN_1, QUEUE_MOTOR_PIN_2);
 
 CUP CurrentCUP(0, 0, 0);
 CUP NextCUP(0, 0, 0);
+
+Ultrasonic ultrasonic(TRIG_PIN, ECHO_PIN);
 
 Servo HORIZONTAL_STEPPER_wrist;
 Servo HORIZONTAL_STEPPER_finger;
@@ -271,6 +274,9 @@ void setup(){
 
     queue_current_state = QUEUE_READY_CUP;
 
+    pinMode(ECHO_PIN, INPUT);
+    pinMode(TRIG_PIN, OUTPUT);
+
     attachInterrupt(digitalPinToInterrupt(RESET_PIN), reset_interrupt, CHANGE);
     attachInterrupt(digitalPinToInterrupt(HORIZONTAL_STEPPER_reset_pin), reset_state_change, RISING);
     attachInterrupt(digitalPinToInterrupt(VERTICAL_STEPPER_reset_pin), reset_state_change, RISING);
@@ -447,7 +453,8 @@ void loop(){
                     break;
 
                 case QUEUE_READY_CUP:
-                    while(queue_current_state == QUEUE_READY_CUP && !reset_flag){}
+                    while(!reset_flag && ultrasonic.Ranging(CM) > 20){delay(100);}
+                    queue_current_state = QUEUE_GO;
                     break;
             }
             break;
