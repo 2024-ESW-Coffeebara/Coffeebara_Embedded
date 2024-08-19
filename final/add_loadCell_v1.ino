@@ -280,8 +280,8 @@ void setup(){
     pinMode(TRIG_PIN, OUTPUT);
 
     LoadCellScale.begin(A1, A0);
-    LoadCellScale.set_scale(2280.f); // set scale 값 조정 필요               
-    LoadCellScale.tare();
+    LoadCellScale.set_scale(18.575); // set scale 값 조정 필요               
+    LoadCellScale.tare(20);
 
     attachInterrupt(digitalPinToInterrupt(RESET_PIN), reset_interrupt, CHANGE);
     attachInterrupt(digitalPinToInterrupt(HORIZONTAL_STEPPER_reset_pin), reset_state_change, RISING);
@@ -602,7 +602,7 @@ void loop(){
 
             LoadCellScale.power_up();
             delay(300);
-            int waste_weight = LoadCellScale.get_units();
+            int waste_weight = (LoadCellScale.get_units() / 1000);
             LoadCellScale.power_down();
 
             HORIZONTAL_STEPPER_wrist.write(HORIZONTAL_STEPPER_wrist_load);

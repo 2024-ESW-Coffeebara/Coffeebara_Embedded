@@ -20,6 +20,8 @@ CUP NextCUP(0, 0, 0);
 
 Ultrasonic ultrasonic(TRIG_PIN, ECHO_PIN);
 
+HX711 LoadCellScale;
+
 Servo HORIZONTAL_STEPPER_wrist;
 Servo HORIZONTAL_STEPPER_finger;
 Servo VERTICAL_STEPPER_finger;
@@ -299,6 +301,10 @@ void setup(){
 
     pinMode(ECHO_PIN, INPUT);
     pinMode(TRIG_PIN, OUTPUT);
+
+    LoadCellScale.begin(A1, A0);
+    LoadCellScale.set_scale(18.575);              
+    LoadCellScale.tare(20);
 
     attachInterrupt(digitalPinToInterrupt(RESET_PIN), reset_interrupt, CHANGE);
     attachInterrupt(digitalPinToInterrupt(HORIZONTAL_STEPPER_reset_pin), reset_state_change, RISING);
@@ -630,8 +636,12 @@ void loop(){
             break;
 
         case HORIZONTAL_LOAD_CUP:
-            int waste_weight = 50;
-            
+        
+            LoadCellScale.power_up();
+            delay(300);
+            int waste_weight = (LoadCellScale.get_units() / 1000);
+            LoadCellScale.power_down();
+
             HORIZONTAL_STEPPER_wrist.write(HORIZONTAL_STEPPER_wrist_load);
 
             horizontal_pos_cup = horizontal_pos_cup_size[current_cup_size];
