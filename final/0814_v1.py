@@ -9,6 +9,7 @@ import math
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 import time
+import requests
 
 tx_rx_data = 0x00
 
@@ -48,6 +49,8 @@ py_serial = serial.Serial(
     port = "/dev/ttyCH341USB0",
     baudrate = 9600
 )
+
+server_URL = 'http://203.252.136.226:8080/device'
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins = '*')
@@ -164,6 +167,8 @@ def state_update():
                 tx_rx_data = py_serial.readline()
                 tx_rx_data = int(tx_rx_data.decode()[:-2])
 
+                
+
             current_state = PY_START
             return
 
@@ -256,7 +261,23 @@ def state_update():
 
                 print(response)
                 if response == HORIZONTAL_LOAD_CUP:
-                    time.sleep(0.5)
+                    
+                    waste_weight = py_serial.readline()
+                    while waste_weight is None:
+                        waste_weight = py_serial.readline()
+
+                    waste_weight = int(waste_weight.decode()[:-2])
+
+                    waste_data = {
+                        'deviceId' : 1,
+                        'capacity' : waste_weight
+                    }
+
+                    server_response = requests.patch(server_URL, json=waste_data)
+                    print(server_response.status_code)
+                    print(server_response.json())
+
+                    time.sleep(0.3)
                     current_state = PY_READY
                     return
 

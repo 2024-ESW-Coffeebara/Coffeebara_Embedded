@@ -1,19 +1,4 @@
-/// VERSION 1
-// STARTING state machine에 큐 관련 처리
-// 즉, 내부 로직과 외부 로직은 독립되어 따로 작동하는게 아님
-// starting에서 큐 상태 파악하고 회전시키는 방식 => starting state 제외하고는 큐의 회전 없음
-
-// 큐의 가이드가 스위치를 누른 경우 jetson으로 신호를 보내 촬영하도록 함
-// 촬영한 정보를 read하여 Next에 저장하는 순서
-// 즉, Current에 대한 처리 완료 후 Next를 위해 이동한 후 찍도록 jetson에 신호를 보내야 함
-
-//////////////////////
-// interrupt pin 번호 확실히 해야함 (queue interrupt, horizontal interrupt, vertical interrupt)
-// queue initialize pin, reset pin 확실히
-//////////////////////
-
-// 뚜껑 따기는 entrance 크기에 따라 다르게
-// 쓰레기 버리기는 전체 cup 높이에 따라 다르게
+// 임의의 로드셀 무게 추가 -> python으로 전송
 #include<Constants.h>
 #include<StepperMulti.h>
 #include<Servo.h>
@@ -105,9 +90,18 @@ int  cm2step(float cm){
 
 void cleaning_cup(){
     if(cup_cnt[1] >= small_cnt_threshold || cup_cnt[2] >= regular_cnt_threshold || cup_cnt[3] >= large_cnt_threshold){
-        if(cup_cnt[1] >= small_cnt_threshold) small_cup_servo.write(cleaning_cup_angle);
-        if(cup_cnt[2] >= regular_cnt_threshold) regular_cup_servo.write(cleaning_cup_angle);
-        if(cup_cnt[3] >= large_cnt_threshold) large_cup_servo.write(cleaning_cup_angle);
+        if(cup_cnt[1] >= small_cnt_threshold){
+          small_cup_servo.write(cleaning_cup_angle);
+          cup_cnt[1] = 0;
+        }
+        if(cup_cnt[2] >= regular_cnt_threshold){
+          regular_cup_servo.write(cleaning_cup_angle);
+          cup_cnt[2] = 0;
+        }
+        if(cup_cnt[3] >= large_cnt_threshold){
+          large_cup_servo.write(cleaning_cup_angle);
+          cup_cnt[3] = 0;
+        }
         delay(1500);
     }
 
@@ -154,6 +148,10 @@ void HORIZONTAL_STEPPER_move(){
 
 void VERTICAL_STEPPER_move(){
     int steps = abs(cm2step(current_vertical_pos - next_vertical_pos));
+
+    if(next_vertical_pos == vertical_pos_default){
+        steps = steps + 50;
+    }
 
     if(current_vertical_pos > next_vertical_pos){ // up
         for(int i = 0; i < steps; i++){
@@ -213,10 +211,30 @@ void servo_detach(){
     large_cup_servo.detach();
 }
 
+void queue_positioning(int speed){
+    no_interrupt = 0;
+    analogWrite(QUEUE_MOTOR_EN, speed);
+    digitalWrite(QUEUE_MOTOR_PIN_1, LOW);
+    digitalWrite(QUEUE_MOTOR_PIN_2, HIGH);
+    
+    if(main_current_state == RESET_SERVO) delay(500);
+    else delay(100);
+            
+    no_interrupt = 0;
+    while(!no_interrupt){
+        analogWrite(QUEUE_MOTOR_EN, speed - 20);
+        digitalWrite(QUEUE_MOTOR_PIN_1, HIGH);
+        digitalWrite(QUEUE_MOTOR_PIN_2, LOW);
+    }
+
+    no_interrupt = !no_interrupt;
+}
+
 void reset_state_change(){
     end_time = millis();
+    step_clear();
     if(end_time - start_time > GLITCH){
-        step_clear();
+        
 
         if(main_current_state == RESET_HORIZONTAL_INTERRUPT){
             main_current_state = RESET_HORIZONTAL_DEFAULT;
@@ -231,8 +249,9 @@ void reset_state_change(){
 
 void reset_interrupt(){
     end_time = millis();
+    step_clear();
     if(end_time - start_time > GLITCH){
-        step_clear();
+        
         if(main_current_state != ONLY_WAITING){
             reset_flag = 1;
             main_current_state = ONLY_WAITING;
@@ -244,13 +263,18 @@ void reset_interrupt(){
 }
 
 void queue_state_change(){
+    end_time = millis();
     queue.Off();
+    delayMicroseconds(1000);
+
+    if(end_time - start_time > GLITCH && !no_interrupt && (queue_current_state == QUEUE_STOP || main_current_state == RESET_SERVO)) no_interrupt = !no_interrupt; 
+
     if(main_current_state == RESET_QUEUE) main_current_state = RESET_SERVO;
     else{
-        if(no_interrupt) return;
         if(queue_current_state == QUEUE_GO) queue_current_state = QUEUE_STOP;
         else if(queue_current_state == QUEUE_STOP) queue_current_state = QUEUE_GO;
     }
+    start_time = end_time;
 }
 
 void queue_cup_init(){
@@ -268,7 +292,6 @@ void setup(){
 
     HORIZONTAL_STEPPER.setSpeed(HORIZONTAL_STEPPER_SPEED);
     VERTICAL_STEPPER.setSpeed(VERTICAL_STEPPER_SPEED);
-    // QUEUE_STEPPER.setSpeed(QUEUE_STEPPER_SPEED);
     
     servo_attach();
 
@@ -308,12 +331,18 @@ void loop(){
 
         case RESET_QUEUE:
             while(main_current_state == RESET_QUEUE){
-                queue.Cw();
+                analogWrite(QUEUE_MOTOR_EN, 80);
+                digitalWrite(QUEUE_MOTOR_PIN_1, LOW);
+                digitalWrite(QUEUE_MOTOR_PIN_2, HIGH);
             }
             break;
 
         case RESET_SERVO:
+        
+            delay(50);
 
+            queue_positioning(100);
+            
             delay(1500);
         
             queue_current_state = QUEUE_READY_CUP;
@@ -374,15 +403,22 @@ void loop(){
                         }                        
 
                         while(queue_current_state == QUEUE_GO && !reset_flag){
-                            queue.Cw();
+                            digitalWrite(QUEUE_MOTOR_PIN_1, LOW);
+                            digitalWrite(QUEUE_MOTOR_PIN_2, HIGH);
+                            for(int i = QUEUE_SPEED + 50; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 5){
+                                analogWrite(QUEUE_MOTOR_EN, i);
+                                delay(10);
+                            }
                         }
                     }
                     break;
 
                 case QUEUE_STOP:
-                    queue.Off();
+                    delay(200);
                     
-                    delay(700);
+                    queue_positioning(QUEUE_SPEED);
+                    
+                    delay(500);
                     // jetson tx2에 ready signal 보냄
                     tx_rx_data = 1 << 7;
                     Serial.println(tx_rx_data);
@@ -453,7 +489,23 @@ void loop(){
                     break;
 
                 case QUEUE_READY_CUP:
-                    while(!reset_flag && ultrasonic.Ranging(CM) > 20){delay(100);}
+                    long duration = 0;
+                    int distance = 999;
+                    
+                    while(!reset_flag && distance > 7 && queue_current_state == QUEUE_READY_CUP){
+                        digitalWrite(TRIG_PIN, LOW);
+                        delayMicroseconds(2);
+                        digitalWrite(TRIG_PIN, HIGH);
+                        delayMicroseconds(10);
+                        digitalWrite(TRIG_PIN, LOW);
+
+                        duration = pulseIn(ECHO_PIN, HIGH);
+
+                        distance = duration * 0.034 / 2;
+                        
+                        delay(100);
+                    }
+                    delay(1500);
                     queue_current_state = QUEUE_GO;
                     break;
             }
@@ -476,8 +528,10 @@ void loop(){
         case VERTICAL_REMOVE_LID_HOLDER:
             next_vertical_pos = vertical_pos_remove_lid;
             VERTICAL_STEPPER_move();
-
+            delay(500);
+            
             remove_lid_servo_reset();
+            delay(500);
 
             next_vertical_pos = vertical_pos_holder;
             VERTICAL_STEPPER_move();
@@ -528,10 +582,17 @@ void loop(){
             HORIZONTAL_STEPPER_finger.write(HORIZONTAL_STEPPER_finger_cup);
             delay(500);
 
-            current_vertical_pos = vertical_pos_default;
-            while(main_current_state == HORIZONTAL_HOLD_CUP){
-                VERTICAL_STEPPER.setStep(1);
+            next_vertical_pos = vertical_pos_default;
+
+            VERTICAL_STEPPER_move();
+
+            if(!reset_flag){
+                main_current_state = HORIZONTAL_WASTE_CUP;
             }
+            // current_vertical_pos = vertical_pos_default;
+            // while(!reset_flag && main_current_state == HORIZONTAL_HOLD_CUP){
+            //     VERTICAL_STEPPER.setStep(1);
+            // }
             break;
 
         case HORIZONTAL_WASTE_CUP:
@@ -569,22 +630,31 @@ void loop(){
             break;
 
         case HORIZONTAL_LOAD_CUP:
+            int waste_weight = 50;
+            
             HORIZONTAL_STEPPER_wrist.write(HORIZONTAL_STEPPER_wrist_load);
 
             horizontal_pos_cup = horizontal_pos_cup_size[current_cup_size];
             next_horizontal_pos = horizontal_pos_cup;
             HORIZONTAL_STEPPER_move();
 
-            HORIZONTAL_STEPPER_finger.write(HORIZONTAL_STEPPER_finger_default);
+            HORIZONTAL_STEPPER_finger.write(HORIZONTAL_STEPPER_finger_cup + 20);
             delay(1500);
+
+            HORIZONTAL_STEPPER_finger.write(HORIZONTAL_STEPPER_finger_default);
+            delay(1000);
 
             next_horizontal_pos = horizontal_pos_default;
             HORIZONTAL_STEPPER_move();
 
             HORIZONTAL_STEPPER_wrist.write(HORIZONTAL_STEPPER_wrist_default);
-            delay(1000);
+            delay(500);
 
             cleaning_cup();
+
+            delay(200);
+
+            Serial.println(waste_weight);
 
             if(!reset_flag){
                 servo_detach();
