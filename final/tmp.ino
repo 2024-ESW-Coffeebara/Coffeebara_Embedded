@@ -235,20 +235,6 @@ void queue_positioning(int speed){
     no_interrupt = !no_interrupt;
 }
 
-void horizontal_step_hold(){
-    digitalWrite(24, HIGH);
-    digitalWrite(26, LOW);
-    digitalWrite(28, LOW);
-    digitalWrite(30, HIGH);
-}
-
-void vertical_step_hold(){
-    digitalWrite(25, HIGH);
-    digitalWrite(27, LOW);
-    digitalWrite(29, LOW);
-    digitalWrite(31, HIGH);
-}
-
 void reset_state_change(){
     end_time = millis();
     step_clear();
@@ -449,7 +435,7 @@ void loop(){
                     
                     queue_positioning(QUEUE_SPEED);
 
-                    analogWrite(QUEUE_MOTOR_EN, QUEUE_SPEED - 20);
+                    analogWrite(QUEUE_MOTOR_EN, QUEUE_SPEED - 290);
                     digitalWrite(QUEUE_MOTOR_PIN_1, LOW);
                     digitalWrite(QUEUE_MOTOR_PIN_2, HIGH);
                     delay(100);
@@ -552,8 +538,7 @@ void loop(){
         
         case VERTICAL_HOLD_CUP:
             delay(300);
-            vertical_step_hold();
-            
+
             remove_lid_servo_in();
 
             VERTICAL_STEPPER_finger_move(VERTICAL_STEPPER_finger_ready_cup[current_entrance_size], VERTICAL_STEPPER_finger_remove_lid[current_entrance_size]);
@@ -585,8 +570,6 @@ void loop(){
             break;
 
         case HORIZONTAL_HOLD_HOLDER:
-            horizontal_step_hold();
-
             VERTICAL_STEPPER_finger_move(VERTICAL_STEPPER_finger_remove_lid[current_entrance_size], VERTICAL_STEPPER_finger_ready_cup[current_entrance_size]);
             delay(500);
             HORIZONTAL_STEPPER_finger.write(HORIZONTAL_STEPPER_finger_holder);
@@ -677,11 +660,18 @@ void loop(){
             int waste_weight = (LoadCellScale.get_units() / 1000);
             LoadCellScale.power_down();
 
+            HORIZONTAL_STEPPER_wrist.write(HORIZONTAL_STEPPER_wrist_load + 30);
+
+            horizontal_pos_cup = horizontal_pos_cup_size[current_cup_size] + 5;
+            next_horizontal_pos = horizontal_pos_cup + 5;
+            HORIZONTAL_STEPPER_move();
+
             HORIZONTAL_STEPPER_wrist.write(HORIZONTAL_STEPPER_wrist_load);
 
             horizontal_pos_cup = horizontal_pos_cup_size[current_cup_size];
             next_horizontal_pos = horizontal_pos_cup;
             HORIZONTAL_STEPPER_move();
+
 
             HORIZONTAL_STEPPER_finger.write(HORIZONTAL_STEPPER_finger_cup + 20);
             delay(1500);
