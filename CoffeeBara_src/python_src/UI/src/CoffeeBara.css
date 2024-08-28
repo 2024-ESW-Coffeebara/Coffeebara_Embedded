@@ -1,0 +1,526 @@
+body{
+    background-color: black;
+
+    width : 2160px;
+    height : 1440px;
+
+    margin : 0 auto;
+    font-family: 'Noto Sans KR';
+}
+
+span{
+    white-space: pre-line;
+}
+
+.dateTime{
+    margin-left : 100px;
+    float : right;
+    margin-top : 5px;
+    /* padding-left : 100px; */
+    width : 15%;
+    height : 100%;
+}
+
+.Clock{
+    width : 100%;
+    height : 40%;
+
+    display : flex;
+    padding-top : 20px;
+    padding-left : 20px;
+
+    color : black;
+}
+#daynight{
+    padding-top: 40px;
+    padding-right : 10px;
+    font-size : 20px;
+}
+
+#clock{
+    margin : 0 ;
+    font-weight : 300;
+    font-size : 60px;
+}
+
+#calender{
+    padding-left : 80px;
+    font-size:25px;
+    font-weight : 5px;
+    color : black;
+
+}
+
+
+.main_div{
+    width : 100%;
+    height : 100%;
+
+    /* background: linear-gradient(45deg, #9aa3a5, #1d272e); */
+    background-color: white;
+
+    /* position: relative; */
+    /* z-index : 2; */
+}
+
+.logo_div{
+    width : 100%;
+    height : 12%;
+
+    display : flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #e6dcc3;
+
+    /* margin-left: 15px; */
+    /* padding-top : 40px; */
+    padding-left: 50px; 
+
+    /* z-index : 1; */
+}
+
+.logo_img_div{
+    width : 7.5%;
+    height : 80%;
+}
+
+.logo_img{
+    width : 100%;
+    height : 100%;
+}
+
+.logo_text_div{
+    width : 70%;
+    height : 100%;
+    
+    margin-left : 10px;
+    display : flex;
+    align-items: center;
+}
+
+.logo_text{
+    font-size : 30px;
+    font-weight: bolder;
+}
+
+.state_icon_info_div{
+    /* position: absolute; */
+    top: 30px;
+    left: 0;
+
+    width : 100%;
+    height: 87%;
+
+    /* margin-left : 30%; */
+    /* margin-top :  5%; */
+
+    background-color: inherit;
+
+    display: flex;
+    align-items: center;
+    gap : 40px;
+}
+
+.state_icon_div{
+    width : 40%;
+    height : 80%;
+    
+    background-color: white;
+    /* border : 5px solid rgb(193, 191, 191); */
+    flex : 2;
+    align-items: center;
+
+    /* border-radius: 20px; */
+
+    display :flex;
+    flex-direction: column; /* 세로로 배치 */
+    align-items: center; /* 가로 중앙 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+
+    margin-left: 20px;
+    /* border : 10px solid #dfdbcd; */
+
+    position: relative;
+}
+
+.cup_icon{
+    width : 28%;
+    height : 48%;
+
+    height: auto; /* 이미지 비율 유지 */
+
+    position: absolute;
+}
+.cup2_icon{
+    width : 30%;
+    height : 50%;
+
+    height: auto; /* 이미지 비율 유지 */
+
+    position: absolute;
+}
+.cap_icon{
+    width : 30%;
+    height : 50%;
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    top : 40px;
+}
+.holder_icon{
+    width : 30%;
+    height : 50%;
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    left: 350px;
+}
+.cap_icon_moved{
+    width : 30%;
+    height : 50%;
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    top : 0;
+}
+.holder_icon_moved{
+    width : 30%;
+    height : 50%;
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    left: 350px;
+    bottom: 150px;
+}
+.recycle_icon{
+    width : 60%;
+    height : 100%;
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+}
+.recycle1_icon{
+    width : 50%;
+    height : 50%;
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    top : 200px;
+}
+.recycle2_icon{
+    width : 50%;
+    height : 50%;
+
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    top : 200px;
+}
+.recycle3_icon{
+    width : 50%;
+    height : 50%;
+
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    top : 200px;
+}
+.shower_head_icon{
+    width : 30%;
+    height : 50%;
+
+    height: auto; /* 이미지 비율 유지 */
+    position: absolute;
+    top : 0;
+    margin-left: 80px;
+}
+.wash1_icon{
+    width : 25%;
+    height : 57%;
+
+    position: absolute;
+    top : 60px;
+}
+.wash2_icon{
+    width : 25%;
+    height : 57%;
+
+    position: absolute;
+    top : 65px;
+}
+
+.default_img{
+    width : 50%;
+    height : 57%;
+
+    height: auto;
+}
+
+.cup_info_div{
+    position: relative;
+    width : 15%;
+    height : 80%;
+
+    /* border-radius: 20px; */
+    /* border-color: 10px black; */
+
+    flex :1;
+    /* border: 5px solid white;  */
+    /* background-color: #ece9df; */
+    /* border : 5px solid #dfdbcd; */
+    background-color: inherit;
+    /* border : 5px solid rgb(193, 191, 191); */
+
+    display: flex; /*플렉스 컨테이너로 설정 */
+    flex-direction: column; /* 자식 요소를 세로 방향으로 정렬 */
+    justify-content: center; /* 자식 요소들을 세로 중앙에 정렬 */
+    align-items: center; /* 자식 요소들을 가로 중앙에 정렬 */
+    text-align: center; /* 텍스트를 중앙 정렬 */
+    
+    padding-top: 70px;
+}
+
+.cup_info_div:nth-child(3) { /* cup_info_div 클래스를 가지는 3번째 녀석 */
+    margin-right: 20px; 
+    
+}
+
+.state_text_div{
+    width : 70%;
+    height : 10%;
+
+    display : flex;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+
+    position: absolute;
+    bottom : 40px;
+}
+
+.state_text{
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+/* 마지막 span 요소의 margin-bottom 제거*/
+.cup_info_div span:first-child {
+    position: absolute;
+    
+    top : 30px;
+    left: 30px;
+    font-size: 40px;
+    font-weight: bolder;
+
+    /* background-color: #e6dcc3; */
+    border-radius: 20px;
+    padding : 10px;
+
+    display : flex;
+    text-align: center;
+}
+
+.cup_info_div span:nth-child(7) {
+    width: 80%;
+    height: 23%;
+
+    margin-bottom: 0px;
+    font-size: 30px;
+    font-weight: bolder;
+    /* background-color: #ece9df; */
+    
+    background: linear-gradient(to bottom, #e6dcc3 100%, transparent 20%);
+    /* background: linear-gradient(to top, #dfdbcd 30%, transparent 20%); */
+    /* border : 5px solid #dfdbcd; */
+    
+    border-radius: 10px;
+    padding : 10px;
+}
+
+.cup_info_div span:not(:first-child):not(:nth-child(7)){
+    width: 80%;
+    height: 23%;
+
+    margin-bottom: 50px;
+    font-size: 30px;
+    font-weight: bolder;
+    /* background-color: #ece9df; */
+    background: linear-gradient(to bottom, #e6dcc3 100%, transparent 20%);
+    
+    /* border : 10px solid #dfdbcd; */
+    border-radius: 10px;
+    padding : 10px;
+}
+
+/* 
+.cup_info_div span:last-child {
+    margin-bottom: 0px;
+    font-size: 35px;
+    font-weight: bolder;
+} */
+
+.bonobono_image_div{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.bonobono_image{
+    width: 30%;
+    height : 30%;
+    z-index: 1;
+    opacity: 0.3;
+    /* display :none; */
+}
+
+
+/* ====================== 여기서부터는 애니메이션을 위한 클래스 정의와 애니메이션 정의 ======================== */
+/* ====================== stage 1 애니메이션  ===========================*/
+
+
+@keyframes moveUp {
+    from { transform: translateY(0); }
+    to { transform: translateY(-40px); }
+}
+
+@keyframes moveDown {
+    from { transform: translateY(0); }
+    to { transform: translateY(183px); }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.cap_icon.moveUp {
+    animation: moveUp 1s forwards;
+}
+
+.holder_icon.moveDown {
+    animation: moveDown 1s forwards;
+}
+
+.cap_icon_moved.blink, .holder_icon_moved.blink {
+    animation: blink 0.3s steps(1, end) 3;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+/* ====================== stage 2 애니메이션  ===========================*/
+
+@keyframes moveDownCup {
+    from { transform: translateY(0); }
+    to { transform: translateY(70px); }
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.cup_icon.moveDownCup {
+    animation: moveDownCup 1s forwards;
+}
+
+.wash1_icon.dripping {
+    animation: fadeInOut 1.5s infinite;
+    animation-delay: 0.75s; /* Half of the duration of the fadeInOut animation */
+}
+
+.wash2_icon.dripping {
+    animation: fadeInOut 1.5s infinite;
+}
+
+/* ====================== stage 3 애니메이션  ===========================*/
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate {
+    animation: rotate 2s linear infinite;
+}
+
+.recycle1_icon.blink {
+    animation: blink 3s infinite;
+}
+.recycle3_icon.blink {
+    animation: blink 3s infinite;
+    animation-delay: 0.5s;
+}
+.recycle2_icon.blink {
+    animation: blink 3s infinite;
+    animation-delay: 1s;
+}
+
+/* ====================== next cup 애니메이션  ===========================*/
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); }
+    to { transform: translateX(110%); }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(110%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes alignCupDivCenter {
+    from { transform: translateX(0); }
+    to { transform: translateX(70%); }
+}
+
+@keyframes alignCupDivLeft {
+    from { transform: translateX(70%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes alignIconDivCenter {
+    from { transform: translateX(0); }
+    to { transform: translateX(30%); }
+}
+
+@keyframes alignIconDivLeft {
+    from { transform: translateX(30%); }
+    to { transform: translateX(0); }
+}
+
+.slide-out-right {
+    animation: slideOutRight 1s forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 1s forwards;
+}
+
+.align-cup-div-center {
+    animation: alignCupDivCenter 1s forwards;
+}
+
+.align-cup-div-left {
+    animation: alignCupDivLeft 1s forwards;
+}
+
+.align-icon-div-center {
+    animation: alignIconDivCenter 1s forwards;
+}
+
+.align-icon-div-left {
+    animation: alignIconDivLeft 1s forwards;
+}
+
+.hidden {
+    visibility: hidden;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024ESW</title>
+
+    <!-- file link -->
+    <link rel = "stylesheet" href = "./CoffeeBara.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+
+    <!-- web font -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- JavaScript -->
+    <script src="./CoffeeBara.js" defer></script>
+</head>
+<body>
+    <div class = "main_div">
+        <div class = "logo_div">
+            <div class = "logo_img_div">
+                <img class = "logo_img" src = "../images/coffeebara.png">
+            </div>
+            <div class = "logo_text_div">
+                <span class = "logo_text"> COFFEE BARA</span>
+                
+            </div>
+            <div class = "dateTime">
+                <div class = "Clock">
+                    <span id = "daynight"></span>
+                    <h1 id = "clock"></h1>
+                </div>
+                <span id = "calender">날짜</span>
+            </div>
+        </div>
+        <div class = "state_icon_info_div">
+            <div class = "state_icon_div align-icon-div-center">
+                <img class = "default_img" src = "../images/coffeebara.png">
+                <img class = "cup_icon hidden" src = "../images/cup.png"/>
+                <img class = "cup2_icon hidden" src = "../images/cup2.png"/>
+                <img class = "cap_icon hidden" src = "../images/cap.png"/>
+                <img class = "holder_icon hidden" src = "../images/holder.png"/>
+                <img class = "cap_icon_moved hidden" src = "../images/cap.png"/>
+                <img class = "holder_icon_moved hidden" src = "../images/holder.png"/>
+
+                <img class = "recycle_icon hidden" src = "../images/recycle.png"/>
+                <img class = "recycle1_icon hidden blink" src = "../images/recycle1.png"/>
+                <img class = "recycle2_icon hidden blink" src = "../images/recycle2.png"/>
+                <img class = "recycle3_icon hidden blink" src = "../images/recycle3.png"/>
+                <img class = "shower_head_icon hidden" src = "../images/shower_head.png"/>
+                <img class = "wash1_icon hidden dripping" src = "../images/wash1.png"/>
+                <img class = "wash2_icon hidden dripping" src = "../images/wash2.png"/>
+                <div class = "state_text_div">
+                    <span class = "state_text"> 먹고 남은 커피컵 저한테 주세요 </span>
+                </div>
+            </div>
+            <div class = "cup_info_div current_cup align-cup-div-center">
+                <span> Current Cup </span>
+                <br>
+                <span class = "size_of_current"> SIZE  </span>
+                <br>
+                <span class = "holder_of_current"> HOLDER  </span>
+                <br>
+                <span class = "stage_of_current"> STAGE  </span>
+                <br>
+            </div>
+            <div class = "cup_info_div next_cup slide-out-right">
+                <span> Next Cup</span>
+                <br>
+                <span class = "size_of_next"> SIZE  </span>
+                <br>
+                <span class = "holder_of_next"> HOLDER  </span>
+                <br>
+                <span class = "stage_of_next">  STAGE  </span>
+                <br>
+            </div>
+        </div>
+        <!-- <div class = "bonobono_image_div">
+            <image class = "bonobono_image" src = "./images/pepe.png">
+        </div> -->
+    </body>
+    </div>
+</body>
+</html>
