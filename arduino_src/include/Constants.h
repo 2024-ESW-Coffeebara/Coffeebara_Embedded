@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define GLITCH                      3
+#define GLITCH                      1
 
 #define QUEUE_GO                    0
 #define QUEUE_STOP                  1
@@ -24,7 +24,10 @@
 #define HORIZONTAL_WASH_CUP         14
 #define HORIZONTAL_LOAD_CUP         15
 
-const int QUEUE_SPEED = 100;
+const int QUEUE_SPEED = 110;
+
+const int LOADCELL_DATA_PIN = 35;
+const int LOADCELL_CLK_PIN  = 36;
 
 const int RESET_PIN            = 2;
 const int QUEUE_INITIALIZE_PIN = 3;
@@ -46,14 +49,17 @@ const int QUEUE_STEPPER_pin = 2;
 /////////////////////////
 // ------- 1 -- 2 -- 3 //
 /////////////////////////
-const int small_cup_servo_pin               = 11;
+const int small_cup_servo_pin               = 13;
 const int regular_cup_servo_pin             = 12;
-const int large_cup_servo_pin               = 13;
+const int large_cup_servo_pin               = 11;
 const int remove_lid_servo_pin              = 17;
 
 const int VERTICAL_STEPPER_reset_pin        = 19;
 const int HORIZONTAL_STEPPER_reset_pin      = 20;
 const int QUEUE_INTERRUPT_PIN               = 21;
+
+const int ECHO_PIN = 45;
+const int TRIG_PIN = 47;
 // const int HORIZONTAL_STEPPER_reset_pin      = 20;
 
 // vertical : 19, 
@@ -75,12 +81,9 @@ const float horizontal_pos_default          = 41.5;
 const float horizontal_pos_reset            = 1.5;
 const float horizontal_pos_wash             = 13;
 const float horizontal_pos_waste            = 35;
-const float horizontal_pos_cup_small        = 62.8;
-const float horizontal_pos_cup_regular      = 77.5;
-const float horizontal_pos_cup_large        = 95;
 
 const float vertical_pos_default            = 0;
-const float vertical_pos_remove_lid         = 0.7;
+const float vertical_pos_remove_lid         = 2;
 const float vertical_pos_remove_holder      = 3;
 const float vertical_pos_holder             = 12;
 const float vertical_pos_cup                = 12;
@@ -89,7 +92,7 @@ const float vertical_pos_cup                = 12;
 const int HORIZONTAL_STEPPER_finger_default = 115;
 const int HORIZONTAL_STEPPER_wrist_default  = 130;
 // const int HORIZONTAL_STEPPER_wrist_load     = 5;
-const int HORIZONTAL_STEPPER_wrist_load     = 130;
+const int HORIZONTAL_STEPPER_wrist_load     = 5;
 
 const int HORIZONTAL_STEPPER_finger_holder  = 55;
 const int HORIZONTAL_STEPPER_finger_cup     = 50;
@@ -101,9 +104,9 @@ const int VERTICAL_STEPPER_finger_minimum   = 40;
 const int VERTICAL_STEPPER_finger_default   = 155;
  
 /* cup cnt threshold */
-const int small_cnt_threshold               = 30;
-const int regular_cnt_threshold             = 25;
-const int large_cnt_threshold               = 16;
+const int small_cnt_threshold               = 99;
+const int regular_cnt_threshold             = 99;
+const int large_cnt_threshold               = 99;
 
 const int cleaning_cup_angle                = 180;
 const int default_cup_angle                 = 0;
@@ -118,20 +121,20 @@ const int REMOVE_LID_ANGLE[7]               = {170, 75, 100, 125, 80, 100, 125};
 // vertical finger, actuator 전부 홀더 크기랑 entrance 따라 달라져야함
 // 아래같이 small, regular, large 나누는건 조금 자제할 것 
 
-const float horizontal_pos_cup_size[7]      = {0, 61.5, 80.5, 96, 61.5, 80.5, 96};
+// const float horizontal_pos_cup_size[7]      = {0, 61.5, 80.5, 96, 61.5, 80.5, 96};
+
+const float horizontal_pos_cup_size[7]      = {0, 96, 80.5, 62.2, 96, 80.5, 62.2};
 
 /* finger angle */
 // const int HORIZONTAL_STEPPER_finger_cup[9] = {50, 50, 50, 50, 50, 50, 50, 50, 50};
 // const int HORIZONTAL_STEPPER_finger_ready_cup[7] = {0, 60.5, 62.5, 66, 60.5, 62.5, 66};
-const int HORIZONTAL_STEPPER_finger_ready_cup[7] = {0, 59, 61, 65, 59, 61, 65};
+const int HORIZONTAL_STEPPER_finger_ready_cup[7] = {0, 59.5, 62.5, 66, 59.5, 62.5, 66};
 const int VERTICAL_STEPPER_finger_remove_lid[7]  = {0, 40, 55, 85, 40, 55, 85};
 const int VERTICAL_STEPPER_finger_cup[7]         = {0, 60, 70, 85, 60, 70, 85};
-const int VERTICAL_STEPPER_finger_ready_cup[7]   = {0, 80, 95, 122, 80, 95, 122};
+const int VERTICAL_STEPPER_finger_ready_cup[7]   = {0, 75, 95, 120, 75, 95, 120};
 
 /* queue constants */
-const int queue_stop_cnt_threshold_fast = 200;
-const int queue_stop_cnt_threshold_slow = 1000;
-// const int queue_stepper_threshold = 200;
+
 
 #endif
 
