@@ -440,14 +440,14 @@ void loop(){
                             digitalWrite(QUEUE_MOTOR_PIN_2, HIGH);
 
                             if(current_cup_size == 0x03){
-                                for(int i = QUEUE_SPEED + 50; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 5){
+                                for(int i = QUEUE_SPEED + 50; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 10){
                                   analogWrite(QUEUE_MOTOR_EN, i);
-                                  delay(20);
+                                  delay(100);
                                 }
                             }else{
-                                for(int i = QUEUE_SPEED + 30; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 5){
+                                for(int i = QUEUE_SPEED + 20; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 10){
                                   analogWrite(QUEUE_MOTOR_EN, i);
-                                  delay(20);
+                                  delay(100);
                                 }
                             }
                         }

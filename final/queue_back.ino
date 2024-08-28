@@ -217,13 +217,12 @@ void servo_detach(){
 
 void queue_positioning(int speed){
     no_interrupt = 0;
-    analogWrite(QUEUE_MOTOR_EN, speed);
+    analogWrite(QUEUE_MOTOR_EN, speed + 20);
     digitalWrite(QUEUE_MOTOR_PIN_1, LOW);
     digitalWrite(QUEUE_MOTOR_PIN_2, HIGH);
     
     no_interrupt = 0;
-    if(main_current_state == RESET_SERVO) delay(500);
-    else if(queue_current_state == QUEUE_STOP) delay(100);
+    delay(200);
             
     no_interrupt = 0;
     while(!no_interrupt){
@@ -231,7 +230,8 @@ void queue_positioning(int speed){
         digitalWrite(QUEUE_MOTOR_PIN_1, HIGH);
         digitalWrite(QUEUE_MOTOR_PIN_2, LOW);
     }
-
+    queue.Off();
+    delay(300);
     no_interrupt = !no_interrupt;
 }
 
@@ -436,18 +436,29 @@ void loop(){
                         while(queue_current_state == QUEUE_GO && !reset_flag){
                             digitalWrite(QUEUE_MOTOR_PIN_1, LOW);
                             digitalWrite(QUEUE_MOTOR_PIN_2, HIGH);
-                            for(int i = QUEUE_SPEED + 50; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 5){
-                                analogWrite(QUEUE_MOTOR_EN, i);
-                                delay(10);
+
+                            if(current_cup_size == 0x03){
+                                for(int i = QUEUE_SPEED + 50; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 10){
+                                  analogWrite(QUEUE_MOTOR_EN, i);
+                                  delay(100);
+                                }
+                            }else{
+                                for(int i = QUEUE_SPEED + 20; queue_current_state == QUEUE_GO && i > QUEUE_SPEED; i -= 10){
+                                  analogWrite(QUEUE_MOTOR_EN, i);
+                                  delay(100);
+                                }
                             }
                         }
                     }
                     break;
 
                 case QUEUE_STOP:
+                    vertical_step_hold();
                     delay(200);
                     
-                    queue_positioning(QUEUE_SPEED);
+                    if(current_cup_size == 0x03){
+                        queue_positioning(QUEUE_SPEED + 10);
+                    }else queue_positioning(QUEUE_SPEED);
 
                     analogWrite(QUEUE_MOTOR_EN, QUEUE_SPEED - 20);
                     digitalWrite(QUEUE_MOTOR_PIN_1, LOW);
@@ -586,6 +597,7 @@ void loop(){
 
         case HORIZONTAL_HOLD_HOLDER:
             horizontal_step_hold();
+            vertical_step_hold();
 
             VERTICAL_STEPPER_finger_move(VERTICAL_STEPPER_finger_remove_lid[current_entrance_size], VERTICAL_STEPPER_finger_ready_cup[current_entrance_size]);
             delay(500);
@@ -627,13 +639,13 @@ void loop(){
 
             VERTICAL_STEPPER_move();
 
-            if(!reset_flag){
-                main_current_state = HORIZONTAL_WASTE_CUP;
-            }
-            // current_vertical_pos = vertical_pos_default;
-            // while(!reset_flag && main_current_state == HORIZONTAL_HOLD_CUP){
-            //     VERTICAL_STEPPER.setStep(1);
+            // if(!reset_flag){
+            //     main_current_state = HORIZONTAL_WASTE_CUP;
             // }
+            current_vertical_pos = vertical_pos_default;
+            while(!reset_flag && main_current_state == HORIZONTAL_HOLD_CUP){
+                VERTICAL_STEPPER.setStep(1);
+            }
             break;
 
         case HORIZONTAL_WASTE_CUP:
